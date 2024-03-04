@@ -5,14 +5,18 @@ import { useStateContext } from "../contexts/ContextProvider.jsx";
 
 export default function Catalogue() {
     const [products, setProducts] = useState([]);
+    const [categories, setCategories] = useState([]);
+    const [selectedCategory, setSelectedCategory] = useState(1);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
     const { user } = useStateContext();
 
+
     useEffect(() => {
+        getCategories();
         getProducts();
-    }, [currentPage]);
+    }, [currentPage, selectedCategory]);
 
     const onDeleteClick = (product) => {
         if (!window.confirm("Are you sure you want to delete this product?")) {
@@ -47,18 +51,32 @@ export default function Catalogue() {
         return null;
     };
 
+    const getCategories = () => {
+        axiosClient.get("/categories")
+        .then(({ data }) => {
+            setCategories(data.data);
+        })
+        .catch((error) => {
+            console.error("Error fetching categories", error);
+        });
+    };
+
     const getProducts = () => {
         setLoading(true);
-        axiosClient
-            .get(`/products?page=${currentPage}`)
-            .then(({ data }) => {
-                setLoading(false);
-                setProducts(data.data);
-                setTotalPages(data.meta.last_page);
-            })
-            .catch(() => {
-                setLoading(false);
-            });
+        let url = `/products?page=${currentPage}`;
+        if (selectedCategory) {
+            url += `&category=${selectedCategory}`;
+        }
+        axiosClient.get(url).then(({ data }) => {
+            setLoading(false);
+            setProducts(data.data);
+            setTotalPages(data.meta.last_page);
+        });
+    };
+
+    const handleCategoryChange = (categoryId) => {
+        setSelectedCategory(categoryId);
+        setCurrentPage(1);
     };
 
     const handlePageChange = (page) => {
@@ -75,6 +93,16 @@ export default function Catalogue() {
                 }}
             >
                 <h1>Catalogue</h1>
+                <div>
+                    <span>Filter by category:</span>
+                    <select onChange={(e) => handleCategoryChange(e.target.value)}>
+                        {categories.map((category) => (
+                            <option key={category.id} value={category.id}>
+                                {category.name}
+                            </option>
+                        ))}
+                    </select>
+                </div>
                 {user.role === "Admin" && (
                     <Link className="btn-add" to="/products/new">
                         Add new

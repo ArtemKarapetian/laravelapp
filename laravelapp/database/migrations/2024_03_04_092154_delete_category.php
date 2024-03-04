@@ -13,8 +13,8 @@ return new class extends Migration
      */
     public function up()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            $table->unsignedBigInteger('parent_id')->nullable();
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('category');
         });
     }
 
@@ -25,8 +25,8 @@ return new class extends Migration
      */
     public function down()
     {
-        Schema::table('categories', function (Blueprint $table) {
-            //
+        Schema::table('products', function (Blueprint $table) {
+            $table->string('category');
         });
     }
 };

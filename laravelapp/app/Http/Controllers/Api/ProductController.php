@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Models\Category;
 use Illuminate\Http\Request;
 use App\Models\Product;
 
@@ -16,9 +17,30 @@ class ProductController extends Controller
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return ProductResource::collection(Product::orderBy('id')->paginate(9));
+        $categoryId = $request->input('category');
+        $categoryIds = $this->getCategoryIds($categoryId);
+
+        $products = Product::whereIn('category_id', $categoryIds)
+            ->orderBy('id')
+            ->paginate(9);
+
+        return ProductResource::collection($products);
+    }
+
+    private function getCategoryIds($categoryId)
+    {
+        $categoryIds = [$categoryId];
+        $children = Category::where('parent_id', $categoryId)->get();
+
+        foreach ($children as $child) {
+            if ($child->id !== $categoryId) {
+                $categoryIds = array_merge($categoryIds, $this->getCategoryIds($child->id));
+            }
+        }
+
+        return $categoryIds;
     }
 
     /**
