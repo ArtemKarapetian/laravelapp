@@ -102,7 +102,7 @@ export default function Catalogue() {
                     </div>
                 )}
             </div>
-            <div className="pagination">
+            <div style={{ display: "flex", justifyContent: "center" }}>
                 {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
                     <button
                         key={page}

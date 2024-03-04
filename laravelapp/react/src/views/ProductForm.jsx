@@ -9,54 +9,54 @@ export default function ProductForm() {
         id: null,
         name: "",
         description: "",
-        price: ""
+        category: "",
+        price: "",
+        image: "",
     });
     const [errors, setErrors] = useState(null);
     const [loading, setLoading] = useState(false);
 
     if (id) {
         useEffect(() => {
-            setLoading(true);
-            axiosClient
-                .get(`/products/${id}`)
-                .then(({ data }) => {
-                    setLoading(false);
-                    setProduct(data);
-                })
-                .catch(() => {
-                    setLoading(false);
-                });
+          setLoading(true)
+          axiosClient.get(`/products/${id}`)
+            .then(({data}) => {
+              setLoading(false)
+              setUser(data)
+            })
+            .catch(() => {
+              setLoading(false)
+            })
         }, [])
-    }
+      }
 
-    const onSubmit = (ev) => {
-        ev.preventDefault();
+      const onSubmit = ev => {
+        ev.preventDefault()
+        setErrors(null)
         if (product.id) {
-            axiosClient
-                .put(`/products/${product.id}`, product)
-                .then(() => {
-                    navigate("/catalogue");
-                })
-                .catch((err) => {
-                    const response = err.response;
-                    if (response && response.status === 422) {
-                        setErrors(response.data.errors);
-                    }
-                });
+          axiosClient.put(`/products/${user.id}`, user)
+            .then(() => {
+              navigate('/products')
+            })
+            .catch(err => {
+              const response = err.response;
+              if (response && response.status === 422) {
+                setErrors(response.data.errors)
+              }
+            })
         } else {
-            axiosClient
-                .post("/products", product)
-                .then(() => {
-                    navigate("/catalogue");
-                })
-                .catch((err) => {
-                    const response = err.response;
-                    if (response && response.status === 422) {
-                        setErrors(response.data.errors);
-                    }
-                });
+          axiosClient.post('/products', product)
+            .then(() => {
+              navigate('/catalogue')
+            })
+            .catch(err => {
+              const response = err.response;
+              if (response && response.status === 422) {
+                setErrors(response.data.errors)
+              }
+            })
         }
-    };
+      }
 
     return (
         <>
@@ -96,6 +96,20 @@ export default function ProductForm() {
                                 setProduct({ ...product, price: ev.target.value })
                             }
                             placeholder="Price"
+                        />
+                        <input
+                            value={product.category}
+                            onChange={(ev) =>
+                                setProduct({ ...product, category: ev.target.value })
+                            }
+                            placeholder="Category"
+                        />
+                        <input
+                            value={product.image}
+                            onChange={(ev) =>
+                                setProduct({ ...product, image: ev.target.value })
+                            }
+                            placeholder="Image"
                         />
                         <button className="btn">Save</button>
                     </form>

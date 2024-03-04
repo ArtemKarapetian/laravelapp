@@ -3,6 +3,8 @@
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\StoreProductRequest;
+use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
 use Illuminate\Http\Request;
 use App\Models\Product;
@@ -22,13 +24,14 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @return \App\Http\Resources\ProductResource
+     * @param  \App\Http\Requests\StoreProductRequest  $request
+     * @return  \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(StoreProductRequest $request)
     {
-        $product = Product::create($request->all());
-        return new ProductResource($product);
+        $data = $request->validated();
+        $product = Product::create($data);
+        return response(['data' => new ProductResource($product), 201]);
     }
 
     /**
@@ -46,14 +49,14 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Http\Requests\UpdateProductRequest  $request
      * @param  int  $id
      * @return \App\Http\Resources\ProductResource
      */
-    public function update(Request $request, $id)
+    public function update(UpdateProductRequest $request, Product $product)
     {
-        $product = Product::findOrFail($id);
-        $product->update($request->all());
+        $data = $request->validated();
+        $product->update($data);
         return new ProductResource($product);
     }
 

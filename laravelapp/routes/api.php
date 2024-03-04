@@ -30,6 +30,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
 Route::apiResource('/products', ProductController::class);
+Route::post('/products', [ProductController::class, 'store']);
 
 Route::post('/signup', [AuthController::class, 'signup']);
 Route::post('/login', [AuthController::class, 'login']);

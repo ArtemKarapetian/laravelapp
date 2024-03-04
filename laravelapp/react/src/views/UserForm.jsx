@@ -31,6 +31,7 @@ export default function UserForm() {
 
   const onSubmit = ev => {
     ev.preventDefault()
+    setErrors(null)
     if (user.id) {
       axiosClient.put(`/users/${user.id}`, user)
         .then(() => {

@@ -56,7 +56,7 @@ export default function Users() {
                     Add new
                 </Link>
             </div>
-            <div className="card animated fadeInDown">
+            <div className="cardUser animated fadeInDown">
                 <table>
                 <thead>
                     <tr>
@@ -104,17 +104,17 @@ export default function Users() {
                         </tbody>
                     )}
                 </table>
-                <div className="pagination">
-                    {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
-                        <button
-                            key={page}
-                            className={currentPage === page ? "active" : ""}
-                            onClick={() => handlePageChange(page)}
-                        >
-                            {page}
-                        </button>
-                    ))}
-                </div>
+            </div>
+            <div style={{ display: "flex", justifyContent: "center" }}>
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((page) => (
+                    <button
+                        key={page}
+                        className={currentPage === page ? "active" : ""}
+                        onClick={() => handlePageChange(page)}
+                    >
+                        {page}
+                    </button>
+                ))}
             </div>
         </div>
     );
