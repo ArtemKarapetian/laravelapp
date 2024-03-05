@@ -32,24 +32,53 @@ export default function Catalogue() {
         }
     };
 
+    const onOrderClick = (product) => {
+        const quantity = document.querySelector(".quantity-input").value;
+        axiosClient.post("/orders", {
+            order_date: new Date().toISOString(),
+            product_id: product.id,
+            quantity: quantity,
+            user_id: user.id,
+        });
+    }
+
     const renderCardActions = (product) => {
-        if (user.role === "Admin") {
-            return (
-                <div className="card-actions">
+        return (
+            <div className="card-actions">
+            {user.role === "Admin" && (
+                <>
+                <div style={{ display: "flex", gap: "10px" }}>
                     <Link className="btn-edit" to={"/products/" + product.id}>
-                        Edit
+                    Edit
                     </Link>
-                    <button
-                        className="btn-delete"
-                        onClick={(ev) => onDeleteClick(product)}
-                    >
-                        Delete
-                    </button>
+                        <button
+                            className="btn-delete"
+                            onClick={(ev) => onDeleteClick(product)}
+                        >
+                            Delete
+                        </button>
+                        </div>
+                    </>
+                )}
+                <div style={{ paddingTop: "10px" }}>
+                    <input
+                        type="number"
+                        min="1"
+                        max="100"
+                        defaultValue="1"
+                        className="quantity-input"
+                    />
                 </div>
-            );
-        }
-        return null;
+                <button
+                    className="btn-order"
+                    onClick={(ev) => onOrderClick(product)}
+                >
+                    Order
+                </button>
+            </div>
+        );
     };
+
 
     const getCategories = () => {
         axiosClient.get("/categories")
@@ -124,7 +153,9 @@ export default function Catalogue() {
                                 />
                                 <p>{p.description}</p>
                                 <p>Price: {p.price}</p>
-                                {renderCardActions(p)}
+                                <div style={{ marginTop: "auto" }}>
+                                    {renderCardActions(p)}
+                                </div>
                             </div>
                         ))}
                     </div>

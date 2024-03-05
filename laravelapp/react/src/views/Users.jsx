@@ -1,14 +1,18 @@
 import { useEffect, useState } from "react";
 import axiosClient from "../axios-client.js";
-import { Link } from "react-router-dom";
+import { Link, Navigate } from "react-router-dom";
 import { useStateContext } from "../contexts/ContextProvider.jsx";
 
 export default function Users() {
+    const { user, token } = useStateContext();
+    if (!token || !user.role === "Admin") {
+        return <Navigate to="/catalogue" />;
+    }
+
     const [users, setUsers] = useState([]);
     const [loading, setLoading] = useState(false);
     const [currentPage, setCurrentPage] = useState(1);
     const [totalPages, setTotalPages] = useState(1);
-    const { user, setNotification } = useStateContext();
 
     useEffect(() => {
         getUsers();
@@ -19,7 +23,6 @@ export default function Users() {
             return;
         }
         axiosClient.delete(`/users/${user.id}`).then(() => {
-            setNotification("User was successfully deleted");
             getUsers();
         });
     };

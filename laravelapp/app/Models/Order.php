@@ -14,6 +14,7 @@ class Order extends Model
         'order_date',
         'product_id',
         'quantity',
+        'user_id',
     ];
 
     protected $dates = [

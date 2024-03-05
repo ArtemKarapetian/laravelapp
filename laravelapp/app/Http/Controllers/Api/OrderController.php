@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\OrderResource;
+use App\Models\Category;
 use App\Models\Order;
 use Illuminate\Http\Request;
 
@@ -14,9 +15,17 @@ class OrderController extends Controller
      *
      * @return \Illuminate\Http\Resources\Json\AnonymousResourceCollection
      */
-    public function index()
+    public function index(Request $request)
     {
-        return OrderResource::collection(Order::orderBy('id')->paginate(10));
+        $user = $request->input('user');
+
+        $query = Order::query();
+
+        if ($user) {
+            $query->where('user_id', $user);
+        }
+
+        return OrderResource::collection($query->paginate(9));
     }
 
     /**

@@ -59,7 +59,8 @@ input:focus {
 
 .btn-add,
 .btn-edit,
-.btn-delete{
+.btn-delete,
+.btn-order{
     padding: 0.5rem 0.75rem;
     font-size: 14px;
     border-radius: 4px;
@@ -80,6 +81,16 @@ input:focus {
 }
 .btn-logout:hover {
     background-color: rgba(0, 0, 0, 0.1);
+}
+
+.btn-order{
+    background-color: #088fa7;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.3s;
 }
 
 .btn:hover,
@@ -132,6 +143,11 @@ table > tbody > tr > td {
     padding: 20px;
     border: 1px solid #ccc;
     border-radius: 5px;
+    display: flex;
+    flex-direction: column;
+}
+.card-content {
+    flex-grow: 1;
 }
 
 .product-image {

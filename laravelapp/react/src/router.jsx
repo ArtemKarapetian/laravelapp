@@ -9,6 +9,8 @@ import UserForm from "./views/UserForm";
 import HomePage from "./views/HomePage";
 import Catalogue from "./views/Catalogue";
 import ProductForm from "./views/ProductForm"; // Добавляем импорт компонента для формы товара
+import Orders from "./views/Orders";
+import MyOrders from "./views/MyOrders";
 
 const router = createBrowserRouter([
     {
@@ -19,6 +21,14 @@ const router = createBrowserRouter([
         path: '/',
         element: <DefaultLayout />,
         children: [
+            {
+                path: '/orders',
+                element: <Orders />
+            },
+            {
+                path: '/myorders',
+                element: <MyOrders />
+            },
             {
                 path: '/catalogue',
                 element: <Catalogue />
